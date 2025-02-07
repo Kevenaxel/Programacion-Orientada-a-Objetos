@@ -9,4 +9,4 @@ class Persona{
 
 }
 obj = new Persona("Kevin")
-obj.saludar();
+obj.saludar("chero")
