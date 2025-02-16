@@ -1,44 +1,64 @@
 class Persona {
-    constructor(nombre, edad, telefono, dui) {
-        this.nombre = nombre;
-        this.edad = edad;
-        this.telefono = telefono;
-        this.setDui(dui); 
+    constructor(nombre, edad, dui) {
+        this._nombre = nombre; 
+        this._edad = edad;
+        this._dui = null; 
+        this.dui = dui; 
     }
 
-    getNombre() {
-        return this.nombre;
+    get nombre() {
+        return this._nombre;
     }
 
-    getEdad() {
-        return this.edad;
+    set nombre(nuevoNombre) {
+        this._nombre = nuevoNombre;
     }
 
-    getTelefono() {
-        return this.telefono;
+    get edad() {
+        return this._edad;
     }
 
-    getDui() {
-        return this.dui;
-    }
-
-    setDui(dui) {
-        const regex = /^\d{9}$/; 
-        if (regex.test(dui)) {
-            this.dui = dui;
+    set edad(nuevaEdad) {
+        if (typeof nuevaEdad === 'number' && nuevaEdad >= 0) {
+            this._edad = nuevaEdad;
+            console.log(nuevaEdad >= 18 ? "Ya es mayor de edad" : "Aún está niño");
         } else {
-            throw new Error("El dui  debe tener 9 numeros.");
+            console.log("La edad debe ser un número positivo");
         }
+    }
+
+    get dui() {
+        return this._dui;
+    }
+
+    set dui(nuevoDui) {
+        const regex = /^\d{9}$/; 
+        if (regex.test(nuevoDui)) {
+            this._dui = nuevoDui;
+        } else {
+            throw new Error("El DUI debe contener  9 dígitos numéricos y no debe incluir caracteres ni  espacios.");
+        }
+    }
+
+    mostrar() {
+        console.log(`Mi nombre es ${this._nombre}, mi edad es: ${this._edad}, y mi DUI es: ${this._dui}`);
     }
 }
 
 
 try {
-    let persona1 = new Persona("Kevin Flores", 20, "76716954", "067430525");
-    console.log("Nombre:", persona1.getNombre());
-    console.log("Edad:", persona1.getEdad());
-    console.log("Teléfono:", persona1.getTelefono());
-    console.log("DUI:", persona1.getDui());
+    let obj = new Persona("Keven", 28, "067430525");
+    obj.mostrar(); 
+
+    obj.nombre = "Juan";
+    obj.mostrar(); 
+
+    
+    obj.edad = 17; 
+    obj.edad = 25; 
+
+   
+    obj.dui = "984557845";
 } catch (error) {
     console.error(error.message);
 }
