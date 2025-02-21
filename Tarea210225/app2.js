@@ -7,49 +7,48 @@ const rl = readline.createInterface({
 
 class Persona {
     constructor(fechaNacimiento) {
-        if (!this.validarFecha(fechaNacimiento)) {
-            throw new Error("El Formato de fecha es invalida Intente denuevo. Utilize 'YYYY-MM-DD'.");
+        if (!this.esFechaValida(fechaNacimiento)) {
+            throw new Error("El formato de fecha utilizado es invalido. Utiliza este:'YYYY-MM-DD'.");//throw Si la fecha no es válida, lanza un error con un mensaje.
         }
-        this._fechaNacimiento = new Date(fechaNacimiento + "T00:00:00");
+        this._fechaNacimiento = new Date(`${fechaNacimiento}T00:00:00`);
     }
 
-    get edad() {
-        const hoy = new Date();
-        let edad = hoy.getFullYear() - this._fechaNacimiento.getFullYear();
-        const mes = hoy.getMonth() - this._fechaNacimiento.getMonth();
-        if (mes < 0 || (mes === 0 && hoy.getDate() < this._fechaNacimiento.getDate())) {
+    get edad() {//Define el metodo para poder calcular la edad
+        const hoy = new Date();//Obtiene la fecha actual
+        let edad = hoy.getFullYear() - this._fechaNacimiento.getFullYear();//Se calcula la edad haciendo la resta de los anos
+        const diferenciaMeses = hoy.getMonth() - this._fechaNacimiento.getMonth();//Se calcula la diferencia entre meses, fecha de nacimiento hasta hoy
+        const mismoMesPeroDiaMenor = diferenciaMeses === 0 && hoy.getDate() < this._fechaNacimiento.getDate();//Hace la comprobacion hacia los datos ingresado si ha cumplido anios
+        
+        if (diferenciaMeses < 0 || mismoMesPeroDiaMenor) {
             edad--;
         }
         return edad;
     }
 
-    set fechaNacimiento(nuevaFecha) {
-        if (!this.validarFecha(nuevaFecha)) {
-            console.log("El Formato de fecha es invalida Intente denuevo. Utilize 'YYYY-MM-DD'.");
+    set fechaNacimiento(nuevaFecha) { // El metodo set sirve para hacer un cambio de fecha de nacimiento si la nueva fecha no es valida tira un error
+        if (!this.esFechaValida(nuevaFecha)) {
+            console.log("El formato de fecha utilizado es invalido. Utiliza este: 'YYYY-MM-DD'.");
             return;
         }
-        this._fechaNacimiento = new Date(nuevaFecha + "T00:00:00");
+        this._fechaNacimiento = new Date(`${nuevaFecha}T00:00:00`);
     }
 
-    validarFecha(fecha) {
-        if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
+    esFechaValida(fecha) {//Hcae la commprobacion si la fecha es valida
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(fecha)) {//Esto es una expresion regular para verificar que la fecha sigue el formato
             return false;
         }
         
-        const fechaConvertida = new Date(fecha + "T00:00:00");
-        const hoy = new Date();
-        
-        return !isNaN(fechaConvertida.getTime()) && fechaConvertida <= hoy;
+        const fechaConvertida = new Date(`${fecha}T00:00:00`);
+        return !isNaN(fechaConvertida.getTime()) && fechaConvertida <= new Date();//Hace la commprobacion que si la fecha es valida y verifica que la fecha no sea en el futuro
     }
 }
 
-// Solicitar la fecha de nacimiento al usuario usando readline
-rl.question("Ingrese la fecha de nacimiento (YYYY-MM-DD): ", (fechaIngresada) => {
+rl.question("Ingresar su fecha de nacimiento porfavor:(YYYY-MM-DD): ", (inputFecha) => {
     try {
-        const persona = new Persona(fechaIngresada);
-        console.log(`Edad: ${persona.edad} años`);
-    } catch (error) {//El catch es por si se ingresa mal los anos tire el error y muestre el mensaje.
+        const usuario = new Persona(inputFecha);
+        console.log(`Tienes ${usuario.edad} años.`);
+    } catch (error) {
         console.log(error.message);
     }
-    rl.close();//Si esta bien el codigo permite terminar el mensaje
+    rl.close();
 });
