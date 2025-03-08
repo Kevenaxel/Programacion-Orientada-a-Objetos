@@ -29,6 +29,6 @@ class Contabilidad extends Empleado {
     }
 }
 
-// Ejemplo de uso
-let empleado1 = new Contabilidad("Juan", 1000);
+
+let empleado1 = new Contabilidad("Kevin", 1000);
 empleado1.calcularSueldoNeto();
